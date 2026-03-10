@@ -29,12 +29,12 @@ variable "LB_public_subnet_name" { default = "upyog_LB_jenkins_public_subnet" }
 variable "LB_subnet_dns_label" { default = "LB" }
 
 ###################### OKE ##########
-variable "oke_version" { default = "v1.33.1" }
+variable "oke_version" { default = "v1.34.1" }
 variable "oke_name" { default = "upyog_oke_jenkins" }
 variable "node_pool_name" { default = "upyog_jenkins_pool" }
 variable "pod_cidr" { default = "10.244.0.0/16" }
 variable "service_cidr" { default = "10.96.0.0/16" }
-variable "node_pool_size" { default = "1" }
+variable "node_pool_size" { default = "2" }
 
 
 variable "oke_node_shape" { default = "VM.Standard.E4.Flex" }

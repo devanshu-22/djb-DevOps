@@ -43,9 +43,12 @@ jenkins:
       enabled: true
     resources:
       limits:
-        cpu: "2000m"
-        memory: "4096Mi"
-    javaOpts: "-Xms2560M -Xmx2560M -Duser.timezone=Asia/Calcutta"
+        cpu: "3000m"
+        memory: "8Gi"
+      requests:
+        cpu: "1000m"
+        memory: "4Gi"
+    javaOpts: "-Xms1024M -Xmx2048M -Duser.timezone=Asia/Calcutta"
 
 nginx-ingress:
   replicas: 1
@@ -72,9 +75,9 @@ cluster-autoscaler:
   cloudProvider: oci
   oci:
     compartmentId: ocid1.compartment.oc1..aaaaaaaa7s46awhletykomysjycqqs2q4eydpurtylki3khvygwhgn3bvltq
-    clusterId: ocid1.cluster.oc1.ap-hyderabad-1.aaaaaaaabbcyg2vmvxzoodvy6eehku2cn44li4p42mccldy4ecz77fapu22a
+    clusterId: ocid1.cluster.oc1.ap-hyderabad-1.aaaaaaaapj7symwbuoptmkk6uxexqwob5mwrcx3yaxrduqia3cu57nv4j3qa
     nodePools:
-      - ocid1.nodepool.oc1.ap-hyderabad-1.aaaaaaaa57tsdli5hudrwfec22tqptxvqtwwfajnzxxidumvvn3lx3hv6sra
+      - ocid1.ocid1.nodepool.oc1.ap-hyderabad-1.aaaaaaaaztjpei2mgmx3bhy2belju5ho7qicfuyy43fwliknqnyofqxvoeqa
   #awsRegion: ap-hyderabad-1
   #autoDiscovery:
   #  clusterName: upyog_jenkins # Add cluster name
