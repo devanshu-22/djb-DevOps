@@ -102,6 +102,10 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: ALLOWED_FORMATS_MAP
     value: {{ index .Values "allowed-file-formats-map" | quote }}
+  {{- if index .Values "filestore-url-validity" }}   
+  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
+    value: {{ index .Values "filestore-url-validity" | quote }}   
+  {{- end }}  
   {{- if index .Values "minio-enabled" }}  
   - name: MINIO_URL
     valueFrom:
@@ -109,8 +113,4 @@ env: |
         name: egov-service-host
         key: minio-url
   {{- end }}
-  {{- if index .Values "filestore-url-validity" }}   
-  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
-    value: {{ index .Values "filestore-url-validity" | quote }}   
-  {{- end }}  
 

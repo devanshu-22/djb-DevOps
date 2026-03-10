@@ -15,7 +15,7 @@ module "vcn" {
   # }
 
   # Changing the following default values
-  vcn_name                = "upyog_jenkins"
+  vcn_name                = "upyog-jenkins"
   create_internet_gateway = true
   create_nat_gateway      = true
   create_service_gateway  = true

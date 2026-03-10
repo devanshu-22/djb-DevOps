@@ -9,7 +9,7 @@ module "oke" {
 
     ### Cluster ####
     create_cluster = true
-    cluster_name = "upyog_dev"
+    cluster_name = "upyog_dev_cluster"
     cluster_type = "enhanced"
 
     control_plane_is_public = true
@@ -63,7 +63,7 @@ module "oke" {
 
     ## Worker Node ####
     worker_pools = {
-        upyog = {
+        upyog_dev_cluster = {
             description = "OKE-managed Node Pool with OKE Oracle Linux 8 image"
         }
     }
@@ -73,7 +73,7 @@ module "oke" {
     # worker_node_labels = var.node_pool_name
     worker_shape = {
         shape            = "VM.Standard.E3.Flex"
-        ocpus            = 2
+        ocpus            = 4
         memory           = 32
         boot_volume_size = 200
         boot_volume_vpus_per_gb = 10

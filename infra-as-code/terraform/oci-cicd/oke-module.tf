@@ -9,7 +9,7 @@ module "oke" {
 
     ### Cluster ####
     create_cluster = true
-    cluster_name = "upyog_jenkins"
+    cluster_name = "upyog-jenkins"
     cluster_type = "enhanced"
 
     control_plane_is_public = true
@@ -63,7 +63,7 @@ module "oke" {
 
     ## Worker Node ####
     worker_pools = {
-        upyog = {
+        upyog-jenkins = {
             description = "OKE-managed Node Pool with OKE Oracle Linux 8 image"
         }
     }

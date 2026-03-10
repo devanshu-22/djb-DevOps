@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 ## Provide a name in place of kube-prometheus-stack for `app:` labels
-## 
+##
 # yaml-language-server: $schema=none
 
 nameOverride: ""
@@ -175,176 +175,176 @@ defaultRules:
   ## Deprecated way to provide custom recording or alerting rules to be deployed into the cluster.
   ##
 additionalPrometheusRules:
-- name: podalerts
-  groups:
-  - name: KubernetesPodAlerts
-    rules:
-    - alert: KubernetesContainerOomKiller
-      expr: '(kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled", namespace!~"monitoring|kube-system|default|logging"}[10m]) >= 1'
-      for: 1m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes container OOM Killed
-        description: |
-          A Container in pod {{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-    - alert: KubernetesPodNotHealthy
-      expr: 'sum by (namespace, pod, phase) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed", namespace!~"monitoring|kube-system|default|logging"}) > 0'
-      for: 10m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Pod not healthy ({{ $labels.namespace }}/{{ $labels.pod }})
-        description: |
-          Pod {{ $labels.pod }} has been in a non-running state for longer than 10 minutes.
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-    - alert: KubernetesPodCrashLooping
-      expr: 'max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging", reason="CrashLoopBackOff"}[10m]) >= 1'
-      for: 1m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Pod {{ $labels.pod }} is in CrashLoopBackOff
-        description: |
-          Pod {{ $labels.pod }} is in CrashLoopBackOff for 10 minutes.
-          VALUE = {{ $value }}
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-    - alert: KubernetesPodImagePullBackOff
-      expr: 'max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging", reason="ImagePullBackOff"}[10m]) >= 1'
-      for: 1m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Pod {{ $labels.pod }} is in ImagePullBackOff
-        description: |
-          Pod {{ $labels.pod }} is in ImagePullBackOff for 10 minutes.
-          VALUE = {{ $value }}
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-- name: nodealerts
-  groups:
-  - name: KubernetesNodeAlerts
-    rules:
-    - alert: KubernetesNodeNotReady
-      expr: 'kube_node_status_condition{condition="Ready", status="true"} == 0'
-      for: 5m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Node ready (node {{ $labels.node }})
-        description: "Node {{ $labels.node }} has been unready for a long time"
-    - alert: KubernetesNodeMemoryPressure
-      expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} == 1'
-      for: 2m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes memory pressure (node {{ $labels.node }})
-        description: "Node {{ $labels.node }} has MemoryPressure condition."
-    - alert: KubernetesNodeDiskPressure
-      expr: 'kube_node_status_condition{condition="DiskPressure", status="true"} == 1'
-      for: 2m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes NODE disk pressure
-        description: "Node {{ $labels.node }} has DiskPressure condition."
-    - alert: KubernetesNodeNetworkUnavailable
-      expr: 'kube_node_status_condition{condition="NetworkUnavailable", status="true"} == 1'
-      for: 2m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Node network unavailable (instance {{ $labels.instance }})
-        description: |
-          Node {{ $labels.node }} has NetworkUnavailable condition.
-          VALUE = {{ $value }}
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-- name: volumealerts
-  groups:
-  - name: KubernetesVolumeAlerts
-    rules:
-    - alert: KubernetesVolumeOutOfDiskSpace
-      expr: '(1 - (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes)) * 100 > 80'
-      for: 10m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes Volume out of disk space (instance {{ $labels.instance }})
-        description: |
-          Volume is almost full (> 80% used).
-          Current Usage = {{ printf "%.0f" $value }}%
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-    - alert: KubernetesPersistentvolumeError
-      expr: 'kube_persistentvolume_status_phase{phase=~"Failed|Pending", job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging"} > 0'
-      for: 5m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: Kubernetes PersistentVolumeClaim pending ({{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }})
-        description: |
-          Persistent volume {{ $labels.persistentvolume }} is in bad state.
-          VALUE = {{ $value }}
-          LABELS:
-          {{ range $key, $value := $labels }}
-            - {{ $key }}: {{ $value }}
-          {{ end }}
-- name: sslalerts
-  groups:
-  - name: SSLCertificateAlerts
-    rules:
-    - alert: SSLCertificateExpiringSoon
-      expr: probe_ssl_earliest_cert_expiry{job="blackbox", instance="prometheus-blackbox-exporter:9115"} - time() < 2*24*3600
-      for: 1m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: "SSL certificate is about to expire"
-        description: "SSL Certificate for {{`{{`}}$labels.instance{{`}}`}} expires in {{`{{`}} .Value | humanizeDuration {{`}}`}}."
-    - alert: SSLCertificateExpired
-      expr: probe_ssl_earliest_cert_expiry{job="blackbox", instance="prometheus-blackbox-exporter:9115"} - time() < 0
-      for: 1m
-      labels:
-        severity: critical
-        repeat_interval: 30m
-      annotations:
-        summary: "SSL certificate has expired"
-        description: |
-          SSL Certificate for {{ $labels.instance }} has expired.
-          VALUE = {{ $value }}
-          LABELS:
-          {{ range $key, $value := $labels }}
-           - {{ $key }}: {{ $value }}
-          {{ end }}
+  - name: podalerts
+    groups:
+      - name: KubernetesPodAlerts
+        rules:
+          - alert: KubernetesContainerOomKiller
+            expr: '(kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled", namespace!~"monitoring|kube-system|default|logging"}[10m]) >= 1'
+            for: 1m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes container OOM Killed
+              description: |
+                A Container in pod {{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+          - alert: KubernetesPodNotHealthy
+            expr: 'sum by (namespace, pod, phase) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed", namespace!~"monitoring|kube-system|default|logging"}) > 0'
+            for: 10m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Pod not healthy ({{ $labels.namespace }}/{{ $labels.pod }})
+              description: |
+                Pod {{ $labels.pod }} has been in a non-running state for longer than 10 minutes.
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+          - alert: KubernetesPodCrashLooping
+            expr: 'max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging", reason="CrashLoopBackOff"}[10m]) >= 1'
+            for: 1m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Pod {{ $labels.pod }} is in CrashLoopBackOff
+              description: |
+                Pod {{ $labels.pod }} is in CrashLoopBackOff for 10 minutes.
+                VALUE = {{ $value }}
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+          - alert: KubernetesPodImagePullBackOff
+            expr: 'max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging", reason="ImagePullBackOff"}[10m]) >= 1'
+            for: 1m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Pod {{ $labels.pod }} is in ImagePullBackOff
+              description: |
+                Pod {{ $labels.pod }} is in ImagePullBackOff for 10 minutes.
+                VALUE = {{ $value }}
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+  - name: nodealerts
+    groups:
+      - name: KubernetesNodeAlerts
+        rules:
+          - alert: KubernetesNodeNotReady
+            expr: 'kube_node_status_condition{condition="Ready", status="true"} == 0'
+            for: 5m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Node ready (node {{ $labels.node }})
+              description: "Node {{ $labels.node }} has been unready for a long time"
+          - alert: KubernetesNodeMemoryPressure
+            expr: 'kube_node_status_condition{condition="MemoryPressure", status="true"} == 1'
+            for: 2m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes memory pressure (node {{ $labels.node }})
+              description: "Node {{ $labels.node }} has MemoryPressure condition."
+          - alert: KubernetesNodeDiskPressure
+            expr: 'kube_node_status_condition{condition="DiskPressure", status="true"} == 1'
+            for: 2m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes NODE disk pressure
+              description: "Node {{ $labels.node }} has DiskPressure condition."
+          - alert: KubernetesNodeNetworkUnavailable
+            expr: 'kube_node_status_condition{condition="NetworkUnavailable", status="true"} == 1'
+            for: 2m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Node network unavailable (instance {{ $labels.instance }})
+              description: |
+                Node {{ $labels.node }} has NetworkUnavailable condition.
+                VALUE = {{ $value }}
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+  - name: volumealerts
+    groups:
+      - name: KubernetesVolumeAlerts
+        rules:
+          - alert: KubernetesVolumeOutOfDiskSpace
+            expr: "(1 - (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes)) * 100 > 80"
+            for: 10m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes Volume out of disk space (instance {{ $labels.instance }})
+              description: |
+                Volume is almost full (> 80% used).
+                Current Usage = {{ printf "%.0f" $value }}%
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+          - alert: KubernetesPersistentvolumeError
+            expr: 'kube_persistentvolume_status_phase{phase=~"Failed|Pending", job="kube-state-metrics", namespace!~"monitoring|kube-system|default|logging"} > 0'
+            for: 5m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: Kubernetes PersistentVolumeClaim pending ({{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }})
+              description: |
+                Persistent volume {{ $labels.persistentvolume }} is in bad state.
+                VALUE = {{ $value }}
+                LABELS:
+                {{ range $key, $value := $labels }}
+                  - {{ $key }}: {{ $value }}
+                {{ end }}
+  - name: sslalerts
+    groups:
+      - name: SSLCertificateAlerts
+        rules:
+          - alert: SSLCertificateExpiringSoon
+            expr: probe_ssl_earliest_cert_expiry{job="blackbox", instance="prometheus-blackbox-exporter:9115"} - time() < 2*24*3600
+            for: 1m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: "SSL certificate is about to expire"
+              description: "SSL Certificate for {{`{{`}}$labels.instance{{`}}`}} expires in {{`{{`}} .Value | humanizeDuration {{`}}`}}."
+          - alert: SSLCertificateExpired
+            expr: probe_ssl_earliest_cert_expiry{job="blackbox", instance="prometheus-blackbox-exporter:9115"} - time() < 0
+            for: 1m
+            labels:
+              severity: critical
+              repeat_interval: 30m
+            annotations:
+              summary: "SSL certificate has expired"
+              description: |
+                SSL Certificate for {{ $labels.instance }} has expired.
+                VALUE = {{ $value }}
+                LABELS:
+                {{ range $key, $value := $labels }}
+                 - {{ $key }}: {{ $value }}
+                {{ end }}
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
@@ -419,7 +419,6 @@ prometheus-windows-exporter:
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
 ##
 alertmanager:
-
   ## Deploy alertmanager
   ##
   enabled: true
@@ -460,41 +459,41 @@ alertmanager:
       slack_api_url: https://hooks.slack.com
       resolve_timeout: 5m
     route:
-      group_by: [ 'alertname' ]
+      group_by: ["alertname"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 10m
       routes:
-      - receiver: slack-notification
-        match:
-          severity: warning
-        continue: true
-      - receiver: slack-notification
-        match:
-          severity: critical
-        continue: true
-      - receiver: email-notification
-        match:
-          severity: critical
-        continue: true
+        - receiver: slack-notification
+          match:
+            severity: warning
+          continue: true
+        - receiver: slack-notification
+          match:
+            severity: critical
+          continue: true
+        - receiver: email-notification
+          match:
+            severity: critical
+          continue: true
 
     receivers:
-    - name: slack-notification
-      slack_configs:
-      - channel: '<slack-channel>'
-        send_resolved: true
-        username: 'Alertmanager'
-        title: |
-          [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
-        text: |
-          {{ range .Alerts -}}
-          {{- "\n" -}}
-          *Alert:* {{ .Annotations.summary }}
-          {{ if .Labels.severity }}*Severity:* `{{ .Labels.severity }}`{{ end }}
-          *Cluster:* {{ .Labels.cluster }}
-          *Details:*
-          {{ .Annotations.description }}
-          {{ end }}
+      - name: slack-notification
+        slack_configs:
+          - channel: "<slack-channel>"
+            send_resolved: true
+            username: "Alertmanager"
+            title: |
+              [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+            text: |
+              {{ range .Alerts -}}
+              {{- "\n" -}}
+              *Alert:* {{ .Annotations.summary }}
+              {{ if .Labels.severity }}*Severity:* `{{ .Labels.severity }}`{{ end }}
+              *Cluster:* {{ .Labels.cluster }}
+              *Details:*
+              {{ .Annotations.description }}
+              {{ end }}
     #    - name: email-notification
     #      email_configs:
     #        - to: 'gowtham.chowdam@egovernments.org'
@@ -938,7 +937,6 @@ alertmanager:
     #         storage: 50Gi
     #     selector: {}
 
-
     ## The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name. string  false
     ##
     externalUrl:
@@ -1379,12 +1377,12 @@ kubeApiServer:
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     ##
     metricRelabelings:
-    # Drop excessively noisy apiserver buckets.
-    - action: drop
-      regex: apiserver_request_duration_seconds_bucket;(0.15|0.2|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2|3|3.5|4|4.5|6|7|8|9|15|25|40|50)
-      sourceLabels:
-      - __name__
-      - le
+      # Drop excessively noisy apiserver buckets.
+      - action: drop
+        regex: apiserver_request_duration_seconds_bucket;(0.15|0.2|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2|3|3.5|4|4.5|6|7|8|9|15|25|40|50)
+        sourceLabels:
+          - __name__
+          - le
     # - action: keep
     #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
     #   sourceLabels: [__name__]
@@ -1479,30 +1477,30 @@ kubelet:
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     ##
     cAdvisorMetricRelabelings:
-    # Drop less useful container CPU metrics.
-    - sourceLabels: [ __name__ ]
-      action: drop
-      regex: 'container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)'
-    # Drop less useful container / always zero filesystem metrics.
-    - sourceLabels: [ __name__ ]
-      action: drop
-      regex: 'container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)'
-    # Drop less useful / always zero container memory metrics.
-    - sourceLabels: [ __name__ ]
-      action: drop
-      regex: 'container_memory_(mapped_file|swap)'
-    # Drop less useful container process metrics.
-    - sourceLabels: [ __name__ ]
-      action: drop
-      regex: 'container_(file_descriptors|tasks_state|threads_max)'
-    # Drop container spec metrics that overlap with kube-state-metrics.
-    - sourceLabels: [ __name__ ]
-      action: drop
-      regex: 'container_spec.*'
-    # Drop cgroup metrics with no pod.
-    - sourceLabels: [ id, pod ]
-      action: drop
-      regex: '.+;'
+      # Drop less useful container CPU metrics.
+      - sourceLabels: [__name__]
+        action: drop
+        regex: "container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)"
+      # Drop less useful container / always zero filesystem metrics.
+      - sourceLabels: [__name__]
+        action: drop
+        regex: "container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)"
+      # Drop less useful / always zero container memory metrics.
+      - sourceLabels: [__name__]
+        action: drop
+        regex: "container_memory_(mapped_file|swap)"
+      # Drop less useful container process metrics.
+      - sourceLabels: [__name__]
+        action: drop
+        regex: "container_(file_descriptors|tasks_state|threads_max)"
+      # Drop container spec metrics that overlap with kube-state-metrics.
+      - sourceLabels: [__name__]
+        action: drop
+        regex: "container_spec.*"
+      # Drop cgroup metrics with no pod.
+      - sourceLabels: [id, pod]
+        action: drop
+        regex: ".+;"
     # - sourceLabels: [__name__, image]
     #   separator: ;
     #   regex: container_([a-z_]+);
@@ -1534,9 +1532,9 @@ kubelet:
     ##
     ## metrics_path is required to match upstream rules and charts
     cAdvisorRelabelings:
-    - action: replace
-      sourceLabels: [ __metrics_path__ ]
-      targetLabel: metrics_path
+      - action: replace
+        sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
     # - sourceLabels: [__meta_kubernetes_pod_node_name]
     #   separator: ;
     #   regex: ^(.*)$
@@ -1548,9 +1546,9 @@ kubelet:
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     ##
     probesRelabelings:
-    - action: replace
-      sourceLabels: [ __metrics_path__ ]
-      targetLabel: metrics_path
+      - action: replace
+        sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
     # - sourceLabels: [__meta_kubernetes_pod_node_name]
     #   separator: ;
     #   regex: ^(.*)$
@@ -1562,9 +1560,9 @@ kubelet:
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
     ##
     resourceRelabelings:
-    - action: replace
-      sourceLabels: [ __metrics_path__ ]
-      targetLabel: metrics_path
+      - action: replace
+        sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
     # - sourceLabels: [__meta_kubernetes_pod_node_name]
     #   separator: ;
     #   regex: ^(.*)$
@@ -1592,9 +1590,9 @@ kubelet:
     ##
     ## metrics_path is required to match upstream rules and charts
     relabelings:
-    - action: replace
-      sourceLabels: [ __metrics_path__ ]
-      targetLabel: metrics_path
+      - action: replace
+        sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
     # - sourceLabels: [__meta_kubernetes_pod_node_name]
     #   separator: ;
     #   regex: ^(.*)$
@@ -2196,8 +2194,8 @@ prometheus-node-exporter:
     jobLabel: node-exporter
   releaseLabel: true
   extraArgs:
-  - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
-  - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+    - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
   service:
     portName: http-metrics
   prometheus:
@@ -2418,7 +2416,6 @@ prometheusOperator:
       ## Decrease log verbosity to errors only
       # logLevel: error
 
-
       ## Liveness probe
       ##
       livenessProbe:
@@ -2507,7 +2504,7 @@ prometheusOperator:
         readOnlyRootFilesystem: true
         capabilities:
           drop:
-          - ALL
+            - ALL
 
     patch:
       enabled: true
@@ -2547,7 +2544,7 @@ prometheusOperator:
         readOnlyRootFilesystem: true
         capabilities:
           drop:
-          - ALL
+            - ALL
       # Security context for patch job container
     patchWebhookJob:
       securityContext:
@@ -2555,7 +2552,7 @@ prometheusOperator:
         readOnlyRootFilesystem: true
         capabilities:
           drop:
-          - ALL
+            - ALL
 
     # Use certmanager to generate webhook certs
     certManager:
@@ -2816,7 +2813,7 @@ prometheusOperator:
     readOnlyRootFilesystem: true
     capabilities:
       drop:
-      - ALL
+        - ALL
 
   # Enable vertical pod autoscaler support for prometheus-operator
   verticalPodAutoscaler:
@@ -3416,7 +3413,8 @@ prometheus:
 
     ## Exemplars related settings that are runtime reloadable.
     ## It requires to enable the exemplar storage feature to be effective.
-    exemplars: ""
+    exemplars:
+      ""
       ## Maximum number of exemplars stored in memory for all series.
       ## If not set, Prometheus uses its default value.
       ## A value of zero or less than zero disables the storage.
@@ -3755,7 +3753,7 @@ prometheus:
       volumeClaimTemplate:
         spec:
           storageClassName: gp2
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 15Gi
@@ -3815,26 +3813,26 @@ prometheus:
     ## If scrape config contains a repetitive section, you may want to use a template.
     ## In the following example, you can see how to define `gce_sd_configs` for multiple zones
     additionalScrapeConfigs:
-    - job_name: 'nginx-ingress-metrics'
-      static_configs:
-      - targets: [ 'nginx-ingress-metrics.egov:10254' ]
-    - job_name: 'blackbox'
-      metrics_path: /probe
-      params:
-        module: [ http_2xx ]
-      static_configs:
-      - targets:
-        - http://demo.com
-      relabel_configs:
-      - source_labels: [ __address__ ]
-        target_label: __param_target
-      - source_labels: [ __param_target ]
-        target_label: instance
-      - target_label: __address__
-        replacement: blackbox-prometheus-blackbox-exporter:9115
-    - job_name: 'blackbox_exporter' # collect blackbox exporter's operational metrics.
-      static_configs:
-      - targets: [ 'blackbox-prometheus-blackbox-exporter:9115' ]
+      - job_name: "nginx-ingress-metrics"
+        static_configs:
+          - targets: ["nginx-ingress-metrics.egov:10254"]
+      - job_name: "blackbox"
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+              - http://demo.com
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-prometheus-blackbox-exporter:9115
+      - job_name: "blackbox_exporter" # collect blackbox exporter's operational metrics.
+        static_configs:
+          - targets: ["blackbox-prometheus-blackbox-exporter:9115"]
     ## If additional scrape configurations are already deployed in a single secret file you can use this section.
     ## Expected values are the secret name and key
     ## Cannot be used with additionalScrapeConfigs
@@ -4243,7 +4241,6 @@ prometheus:
   ## ref: https://thanos.io/tip/components/rule.md/
   ##
 thanosRuler:
-
   ## Deploy thanosRuler
   ##
   enabled: false

@@ -29,7 +29,7 @@ variable "LB_public_subnet_name" { default = "upyog_LB_public_subnet" }
 variable "LB_subnet_dns_label" { default = "LB" }
 
 ###################### OKE ##########
-variable "oke_version" { default = "v1.33.1" }
+variable "oke_version" { default = "v1.34.1" }
 variable "oke_name" { default = "upyog_oke" }
 variable "node_pool_name" { default = "upyog_dev_pool" }
 variable "pod_cidr" { default = "10.244.0.0/16" }
