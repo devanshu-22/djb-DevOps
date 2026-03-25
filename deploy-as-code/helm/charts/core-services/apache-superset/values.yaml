@@ -1,0 +1,108 @@
+# Common Labels
+labels:
+  app: "superset"
+  group: "core"
+
+namespace: egov
+
+# Ingress Configs
+ingress:
+  enabled: true
+  zuul: false
+  context: "superset"
+
+# Container Configs
+image:
+  repository: "docker.io/delhijalboard/apache-superset"
+  tag: "v4"
+
+replicas: "1"
+
+extraVolumes: |
+  - name: superset-config
+    configMap:
+      name: superset-config
+
+extraVolumeMounts: |
+  - name: superset-config
+    mountPath: /app/pythonpath
+
+
+#volumeMounts:
+#  - name: superset-config
+#    mountPath: /app/pythonpath/superset_config.py
+#
+#volumes:
+#  - name: superset-config
+#    configMap:
+#      name: superset-config
+
+
+# Additional Container Envs
+env: |
+  - name: SUPERSET_ENV
+    value: production
+
+  - name: SUPERSET_WEBSERVER_PORT
+    value: "8080"
+
+  - name: SUPERSET_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: superset
+        key: superset-secret-key
+
+  - name: SUPERSET_DB_NAME
+    value: "superset"
+
+  - name: DB_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: db-host
+
+  - name: DB_NAME
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: db-name
+
+  - name: DB_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: db
+        key: username
+
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db
+        key: password
+
+  - name: REDIS_HOST
+    value: "redis.backbone"
+
+  - name: REDIS_PORT
+    value: "6379"
+
+  - name: SUPERSET_APP_ROOT
+    value: "/superset"
+
+  - name: ENABLE_PROXY_FIX
+    value: "True"
+
+  - name: PREFERRED_URL_SCHEME
+    value: "https"
+
+  - name: PYTHONPATH
+    value: "/app/pythonpath"
+
+  - name: SUPERSET_CONFIG_PATH
+    value: /app/pythonpath/superset_config.py
+
+#  - name: SUPERSET_LOAD_EXAMPLES
+#    value: "no"
+#  - name: FLASK_ENV
+#    value: production
+#  - name: SQLALCHEMY_DATABASE_URI
+#    value: "postgresql+psycopg2://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST)/superset"

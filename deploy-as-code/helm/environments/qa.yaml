@@ -1,8 +1,8 @@
 global:
   domain: dev-djb.nitcon.in ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
   setup: fullsetup
-  containerRegistry: docker.io/delhijalboard 
-  
+  containerRegistry: docker.io/delhijalboard
+
 cluster-configs:
   namespaces:
     create: true
@@ -29,6 +29,7 @@ cluster-configs:
         db-name: djbdev ## Add db-name
         db-url: jdbc:postgresql://140.245.249.233:5432/djbdev ## example: jdbc:postgresql://upyog-demo.postgres.database.azure.com:5432/egov_demo
         auth-db-name: "authdb"
+        superset-db-name: "superset"
         #ekyc-db-name: "ekycdb"
         #erp-db-url: jdbc:postgresql://primary.kgotpxbdxyrjhhuirxziysxziejhpq.postgresql.ap-hyderabad-1.oci.oraclecloud.com:5432/djbdevfinance
         #keycloak-db-name: "djbdev"
@@ -121,6 +122,7 @@ cluster-configs:
         pgr-master: "http://pgr-master:8080/"
         pgr-rest: "http://pgr-rest:8080/"
         pdf-service: "http://pdf-service.egov:8080/"
+        driver-tanker-tracker-service: "http://driver-tanker-tracker-service.egov:8080/"
         report: "http://report:8080/"
         swm-services: "http://swm-services:8080/"
         tenant: "http://tenant:8080/"
@@ -148,8 +150,8 @@ cluster-configs:
         egov-url-shortening: "http://egov-url-shortening:8080/"
         fsm-calculator: "http://fsm-calculator.egov:8080/"
         fsm: "http://fsm.egov:8080/"
-        vehicle: "http://vehicle.egov:8080"
-        vendor: "http://vendor.egov:8080"
+        vehicle: "http://vehicle.egov:8080/"
+        vendor: "http://vendor.egov:8080/"
         egov-edcr: "http://egov-edcr.egov:8080/"
         echallan-calculator: http://echallan-calculator.egov:8080/
         echallan-services: http://echallan-services.egov:8080/
@@ -169,6 +171,8 @@ cluster-configs:
         egov-user-event: "http://egov-user-event:8080/"
         egov-document-uploader: "http://egov-document-uploader:8080/"
         service-request: "http://service-request:8080/"
+        egov-survey-services: "http://egov-survey-services:8080/"
+        superset: "http://superset:8080/"
 
 employee:
   dashboard-url: "https://dashboard-pbuat.egovernments.org/s/w---s/app/kibana#/dashboard/4e687470-f3c7-11e8-8d09-b151e2b1cf8e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A300000)%2Ctime%3A(from%3Anow-15m%2Cmode%3Aquick%2Cto%3Anow))"
@@ -218,7 +222,7 @@ egov-filestore:
   allowed-file-formats-map: "{jpg:{'image/jpg','image/jpeg'},jpeg:{'image/jpeg','image/jpg'},png:{'image/png'},pdf:{'application/pdf'},odt:{'application/vnd.oasis.opendocument.text'},ods:{'application/vnd.oasis.opendocument.spreadsheet'},docx:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},doc:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},dxf:{'text/plain','application/dxf','application/octet-stream','image/vnd.dxf','image/vnd.dxf; format=ascii','image/vnd.dxf; format=binary','image/vnd.dxb'},csv:{'text/plain'},txt:{'text/plain'},xlsx:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel'},xls:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel'}}"
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx"
   filestore-url-validity: 3600
-  fixed-bucketname: djb-dev-filestore  ## Add filestore bucket name
+  fixed-bucketname: djb-dev-filestore ## Add filestore bucket name
 
 pgadmin:
   images:
@@ -392,13 +396,13 @@ egov-indexer:
     gitSync:
       repo: "git@github.com:Delhi-Jal-Board/djb-upyog-configs" ##### Change repo url with Your fork Repo url
       branch: "master" ##### Change repo branch with Your fork Repo branch
-  egov-indexer-yaml-repo-path: "file:///work-dir/djb-upyog-configs/configs/egov-indexer/billingservices-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/collection-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-telemetry-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-uploader-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/error-queue.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/finance-rolloutadotpion-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/payment-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-pgr-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-pt-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-tl-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/chatbot-telemetry.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/water-service.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/sewerage-service.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/water-services-meter.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/property-services.yml"
+  egov-indexer-yaml-repo-path: "file:///work-dir/djb-upyog-configs/configs/egov-indexer/billingservices-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/chatbot-telemetry-v2.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/chatbot-telemetry.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/citizen-feedback-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/collection-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/edcr-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-bpa-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-echallan.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-fsm.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-noc-services.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-pqm-service.yml, file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-telemetry-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-uploader-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-url-shortening-indexer.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-vehicle.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/egov-vendor.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/error-queue.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/finance-rolloutadoption-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/finance-rolloutadotpion-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/fire-noc-service.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/fsm-inbox-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/individual-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/payment-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/pgr-migration-batch-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/pgr-services.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/pqm-anomaly-finder-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/pqm-service-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/privacy-audit.yaml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/property-services.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-birth-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-bpastakeholder-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-death-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-pgr-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-pt-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/rainmaker-tl-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/sewerage-service.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/tradelicense-indexer.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/water-service.yml,file:///work-dir/djb-upyog-configs/configs/egov-indexer/water-services-meter.yml"
 
 egov-persister:
   replicas: 1
   images:
     - upyogio/egov-persister
-  persist-yml-path: "file:///work-dir/djb-upyog-configs/configs/egov-persister/request-service-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pgr-services-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-mutation-calculator-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/apportion-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/billing-services-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egf-bill.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-user-event-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/firenoc_persiter.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/hrms-employee-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pdf-generator.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pg-service-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pgr.v3.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/property-services.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-calculator-v2-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-drafts.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tl-billing-slab-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tl-calculation-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/uploader-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/collection-migration-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/property-services-registry.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tradelicense.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/sewerage-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/water-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/water-meter.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/bpa-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/assessment-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/chatbot.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-calculator.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-disposal.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-maintenance.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/vendor-persister.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-document-upload-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/service-request-persister.yml"
+  persist-yml-path: "file:///work-dir/djb-upyog-configs/configs/egov-persister/request-service-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pgr-services-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-mutation-calculator-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/apportion-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/billing-services-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egf-bill.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-user-event-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/firenoc_persiter.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/hrms-employee-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pdf-generator.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pg-service-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pgr.v3.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/property-services.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-calculator-v2-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-drafts.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/pt-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tl-billing-slab-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tl-calculation-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/uploader-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/collection-migration-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/property-services-registry.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/tradelicense.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/sewerage-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/water-persist.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/water-meter.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/bpa-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/assessment-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/chatbot.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-calculator.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-disposal.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-maintenance.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/asset-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/vendor-persister.yaml,file:///work-dir/djb-upyog-configs/configs/egov-persister/egov-document-upload-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/service-request-persister.yml,file:///work-dir/djb-upyog-configs/configs/egov-persister/vehicle-persister.yaml"
   initContainers:
     gitSync:
       repo: "git@github.com:Delhi-Jal-Board/djb-upyog-configs" ##### Change repo url with Your fork Repo url
@@ -414,7 +418,7 @@ egov-data-uploader:
       branch: "master" ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
-  search-yaml-path: "file:///work-dir/djb-upyog-configs/configs/egov-searcher/rainmaker-pgr-v2.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/weekly-impact-emailer-searcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/PTDemandBasedSearcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/bill-genie.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/rainmaker-tl.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/localitySearcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/inboxassetsearch.yaml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/inboxWTSearch.yml"
+  search-yaml-path: "file:///work-dir/djb-upyog-configs/configs/egov-searcher/inboxFSMSearch.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/rainmaker-pgr-v2.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/weekly-impact-emailer-searcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/PTDemandBasedSearcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/bill-genie.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/rainmaker-tl.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/localitySearcher.yml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/inboxassetsearch.yaml,file:///work-dir/djb-upyog-configs/configs/egov-searcher/inboxWTSearch.yml"
   initContainers:
     gitSync:
       repo: "git@github.com:Delhi-Jal-Board/djb-upyog-configs" ##### Change repo url with Your fork Repo url
