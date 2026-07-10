@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: egov
+data:
+  host: "primary.lzfkftlrr7afsvb6ya2rcza6hkgpta.postgresql.ap-mumbai-1.oci.oraclecloud.com"
+  db-admin-username: "admin"
+  db-read-username: "pbprod_readonly"
+  port: "5432"
+  env: "PBPROD"
+  maintenance-db-name: "postgres"

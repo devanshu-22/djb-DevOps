@@ -3,21 +3,29 @@ kind: Service
 metadata:
   name: {{ template "name" . }}
   namespace: {{ .Values.namespace }}
-  labels: 
+  labels:
     app: {{ template "name" . }}
+
 spec:
   type: {{ .Values.service.type }}
+
   {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerIP)) }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
+
+  selector:
+    app: {{ template "name" . }}
+
   ports:
     - name: minio
-      port: {{ .Values.service.port }}
-      targetPort: minio
+      port: 9000
+      targetPort: 9000
       {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
       nodePort: {{ .Values.service.nodePort }}
       {{- else if eq .Values.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
-  selector: 
-    app: {{ template "name" . }}
+
+    - name: console
+      port: 9001
+      targetPort: 9001

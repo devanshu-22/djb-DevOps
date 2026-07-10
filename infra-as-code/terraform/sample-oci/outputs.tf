@@ -1,15 +1,14 @@
 # Outputs for compartment
 
-output "compartment-name" {
-  value = oci_identity_compartment.create-compartment.name
-}
+#output "compartment-name" {
+#  value = oci_identity_compartment.create-compartment.name
+#}
 
 output "compartment-OCID" {
-  value = oci_identity_compartment.create-compartment.id
+  value = var.compartment_ocid
 }
-
 output "availability_domain" {
-  value = data.oci_identity_availability_domains.ads.availability_domains
+  value = var.availability_domain
 }
 
 # Outputs for the vcn module

@@ -5,6 +5,7 @@ environments:
       - ../../environments/qa.yaml
       - ../../environments/qa-secrets.yaml
 
+---
 repositories:
 - name: grafana
   url: https://grafana.github.io/helm-charts
@@ -16,7 +17,7 @@ repositories:
 releases:
   - name: loki-stack
     installed: true
-    namespace: {{ .Values.namespace | default "monitoring" }}
+    namespace: monitoring 
     chart: grafana/loki-stack
     version: 2.10.1
     values:
@@ -45,7 +46,7 @@ releases:
   
   - name: kube-prometheus-stack
     installed: true
-    namespace: {{ .Values.namespace | default "monitoring" }}
+    namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 56.6.2
     disableValidation: true
@@ -80,7 +81,7 @@ releases:
   
   - name: grafana
     installed: true
-    namespace: {{ .Values.namespace | default "monitoring" }}
+    namespace: monitoring
     chart: grafana/grafana
     version: 7.3.0
     values:
@@ -100,6 +101,6 @@ releases:
   
   - name: blackbox
     installed: true
-    namespace: {{ .Values.namespace | default "monitoring" }}
+    namespace: monitoring
     chart: ../backbone-services/prometheus-blackbox-exporter
     version: 8.2.0

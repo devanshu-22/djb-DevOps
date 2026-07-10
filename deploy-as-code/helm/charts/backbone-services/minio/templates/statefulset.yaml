@@ -48,20 +48,32 @@ spec:
             - /bin/bash
             - -ec
             - |
-              chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.fsGroup }} {{ .Values.persistence.mountPath }}
+              echo "Skipping volume permission changes"
           securityContext:
             runAsUser: 0
-          {{- if .Values.volumePermissions.resources }}
-          resources: {{- toYaml .Values.volumePermissions.resources | nindent 12 }}
-          {{- end }}
           volumeMounts:
-            - name: data
+            - name: minio-data
               mountPath: {{ .Values.persistence.mountPath }}
       {{- end }}
       containers:
         - name: minio
           image: {{ include "minio.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+
+          command:
+            - minio
+
+          args:
+            - server
+            {{- $minioFullname := .Values.name }}
+            {{- $minioHeadlessServiceName := printf "%s-%s" $minioFullname "headless" | trunc 63 }}
+            {{- $releaseNamespace := .Values.namespace }}
+            {{- range $i, $e := until $replicas }}
+            - http://{{ $minioFullname }}-{{ $e }}.{{ $minioHeadlessServiceName }}.{{ $releaseNamespace }}.svc.{{ $.Values.clusterDomain }}/data
+            {{- end }}
+            - --console-address
+            - ":9001"
+
           {{- if .Values.securityContext.enabled }}
           securityContext:
             runAsUser: {{ .Values.securityContext.runAsUser }}
@@ -84,7 +96,7 @@ spec:
             - name: MINIO_ACCESS_KEY_FILE
               value: {{ .Values.accessKeyFile | quote }}
             {{- else }}
-            - name: MINIO_ACCESS_KEY
+            - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
                   name: {{  template "name" . }}
@@ -94,7 +106,7 @@ spec:
             - name: MINIO_SECRET_KEY_FILE
               value: "/opt/bitnami/minio/secrets/secret-key"
             {{- else }}
-            - name: MINIO_SECRET_KEY
+            - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{  template "name" . }}
@@ -102,10 +114,14 @@ spec:
             {{- end }}
             - name: MINIO_BROWSER
               value: {{ ternary "off" "on" .Values.disableWebUI | quote }}
+            - name: MINIO_BROWSER_REDIRECT_URL
+              value: "https://minio.dev-djberp.nitcon.in"
+            - name: MINIO_SERVER_URL
+              value: "https://s3.dev-djberp.nitcon.in"
             {{- if .Values.prometheusAuthType }}
             - name: MINIO_PROMETHEUS_AUTH_TYPE
               value: {{ .Values.prometheusAuthType }}
-            {{- end }}               
+            {{- end }}              
             {{- if .Values.extraEnv }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
@@ -168,4 +184,3 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
-

@@ -3,7 +3,7 @@
 resource "oci_core_subnet" "vcn-public-subnet"{
 
   # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
   cidr_block = var.cidr_block_public
  
@@ -16,7 +16,7 @@ resource "oci_core_subnet" "vcn-public-subnet"{
 resource "oci_core_subnet" "LB-public-subnet"{
 
   # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
   cidr_block = var.cidr_LB_subnet
  
@@ -29,7 +29,7 @@ resource "oci_core_subnet" "LB-public-subnet"{
 resource "oci_core_subnet" "postgre_public_subnet"{
 
   # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
   cidr_block = var.postgre_public_subnet
  

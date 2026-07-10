@@ -1,15 +1,16 @@
 module "oke" {
     source  = "oracle-terraform-modules/oke/oci"
     version = "5.3.2"
-    compartment_id = oci_identity_compartment.create-compartment.id
+    compartment_id = var.compartment_ocid
     tenancy_id = var.tenancy_ocid
     providers = {
-      oci.home = oci.HYD
-    }
+    oci      = oci
+    oci.home = oci.home
+  }
 
     ### Cluster ####
     create_cluster = true
-    cluster_name = "upyog_dev_cluster"
+    cluster_name = "DJB-EDP-LZ-UPYOG-DEV-OKE-BOM"
     cluster_type = "enhanced"
 
     control_plane_is_public = true
@@ -63,7 +64,7 @@ module "oke" {
 
     ## Worker Node ####
     worker_pools = {
-        upyog_dev_cluster = {
+        DJB-EDP-LZ-UPYOG-DEV-OKE-BOM = {
             description = "OKE-managed Node Pool with OKE Oracle Linux 8 image"
         }
     }
@@ -72,7 +73,7 @@ module "oke" {
     worker_is_public = false
     # worker_node_labels = var.node_pool_name
     worker_shape = {
-        shape            = "VM.Standard.E3.Flex"
+        shape            = "VM.Standard.E5.Flex"
         ocpus            = 4
         memory           = 32
         boot_volume_size = 200
