@@ -4,11 +4,11 @@ resource "oci_core_security_list" "private-security-list"{
   # provider = oci.HYD
 
 # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
 
 # Optional
-  display_name = "security-list-for-private-subnet"
+  display_name = "DJB-EDP-LZ-UPYOG-DEV-SL-PRIVATE-SUBNET-BOM"
 
     egress_security_rules {
       stateless = false
@@ -62,11 +62,11 @@ resource "oci_core_security_list" "PG-security-list"{
   # provider = oci.HYD
 
 # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
 
 # Optional
-  display_name = "security-list-for-PG-private-subnet"
+  display_name = "DJB-EDP-LZ-UPYOG-DEV-SL-PG-PRIVATE-SUBNET-BOM"
 
     egress_security_rules {
       stateless = false

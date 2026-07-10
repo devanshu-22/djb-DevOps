@@ -1,7 +1,7 @@
 resource "oci_core_subnet" "vcn-private-subnet"{
 
   # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
   cidr_block = var.cidr_block_private
   prohibit_public_ip_on_vnic = true
@@ -16,7 +16,7 @@ resource "oci_core_subnet" "vcn-private-subnet"{
 resource "oci_core_subnet" "postgre_private_subnet"{
 
   # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
   cidr_block = var.postgre_private_subnet
   prohibit_public_ip_on_vnic = true

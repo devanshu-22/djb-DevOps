@@ -6,7 +6,7 @@ module "vcn" {
   # insert the 1 required variable here
 
   # Required Inputs
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
 
   # Optional Inputs 
   region = var.region
@@ -15,7 +15,7 @@ module "vcn" {
   # }
 
   # Changing the following default values
-  vcn_name                = "upyog_dev"
+  vcn_name                = "DJB-EDP-LZ-UPYOG-DEV-VCN-BOM"
   create_internet_gateway = true
   create_nat_gateway      = true
   create_service_gateway  = true

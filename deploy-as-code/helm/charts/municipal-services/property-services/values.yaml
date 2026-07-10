@@ -70,6 +70,16 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: pt-calculator-v2
+  - name: EGOV_ENC_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-enc-service
+  - name: EGOV_WORKFLOW_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-workflow-v2 
   - name: EGOV_PT-SERVICES-V2_HOST
     valueFrom:
       configMapKeyRef:

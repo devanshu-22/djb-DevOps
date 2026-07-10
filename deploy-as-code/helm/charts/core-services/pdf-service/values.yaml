@@ -60,10 +60,7 @@ env: |
         name: db
         key: password
   - name: KAFKA_BROKER_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: kafka-brokers
+    value: "release-name-kafka.kafka-kraft:9092"
   - name: EGOV_EXTERNAL_HOST
     valueFrom:
       configMapKeyRef:

@@ -18,7 +18,7 @@ image:
 replicas: "1"
 
 # Additional Container Envs
-env: |  
+env: |
   - name: SERVER_PORT
     value: "8080"
   - name: PROXY_ADDRESS_FORWARDING
@@ -48,7 +48,7 @@ env: |
         name: db
         key: password
   - name: KC_DB_URL
-    value: "jdbc:postgresql://140.245.249.233:5432/authdb"      
+    value: "jdbc:postgresql://primary.lzfkftlrr7afsvb6ya2rcza6hkgpta.postgresql.ap-mumbai-1.oci.oraclecloud.com:5432/authdb"      
   - name: KC_HTTP_ENABLED
     value: "true"
   - name: KC_PROXY
@@ -58,7 +58,7 @@ env: |
   - name: KC_HTTP_RELATIVE_PATH
     value: "/keycloak"
   - name: KC_HOSTNAME_URL
-    value: "https://dev-djb.nitcon.in/keycloak"
+    value: "https://dev-djberp.nitcon.in/keycloak"
   - name: KC_HOSTNAME_PATH
     value: "/keycloak"
   - name: KC_PROXY_HEADERS
@@ -72,7 +72,7 @@ env: |
     value: postgresql
 
   - name: QUARKUS_DATASOURCE_USER_STORE_JDBC_URL
-    value: "jdbc:postgresql://140.245.249.233:5432/djbdev"
+    value: "jdbc:postgresql://primary.lzfkftlrr7afsvb6ya2rcza6hkgpta.postgresql.ap-mumbai-1.oci.oraclecloud.com:5432/djbdev"
 
   - name: QUARKUS_DATASOURCE_USER_STORE_USERNAME
     valueFrom:
@@ -111,16 +111,16 @@ env: |
 #
 #  - name: QUARKUS_HIBERNATE_ORM_USER_STORE_PACKAGES
 #    value: org.keycloak.multipleds.storage.user.entities
-  
 
 
-  #- name: KEYCLOAK_USER
-  #  valueFrom:
-  #    secretKeyRef:
-  #      name: db
-  #      key: keycloak-username
-  #- name: KEYCLOAK_PASSWORD
-  #  valueFrom:
-  #    secretKeyRef:
-  #      name: db
-  #      key: keycloak-password
+
+#- name: KEYCLOAK_USER
+#  valueFrom:
+#    secretKeyRef:
+#      name: db
+#      key: keycloak-username
+#- name: KEYCLOAK_PASSWORD
+#  valueFrom:
+#    secretKeyRef:
+#      name: db
+#      key: keycloak-password

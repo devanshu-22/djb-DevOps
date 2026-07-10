@@ -39,6 +39,10 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: es-indexer-host
+  - name: SERVICES_ESINDEXER_USERNAME
+    value: elastic
+  - name: SERVICES_ESINDEXER_PASSWORD
+    value: 8fwbD6HbJh6HU0oddsHm8TE
   - name: SERVICES_ESINDEXER_HOST_PORT
     value: "9200"
   - name: ES_TARGET_INDEX_NAME
@@ -50,7 +54,9 @@ env: |
   - name: ES_DOCUMENT_TYPE
     value: "pipeline_data"
   - name: ES_HOST_SCHEMA
-    value: "https"
+    value: "http"
+  - name: ES_INDEX_TYPE
+    value: "_doc"
   - name: ES_INDEX_SEARCHQUERY_COLLECTION
     value: "{\"size\": \"10\",\"query\":{\"bool\":{\"must\":[{\"wildcard\": {\"Data.tenantId.keyword\":\"pb.*\"}}]}}}"
   - name: ES_INDEX_SEARCHQUERY_BILLING
@@ -91,3 +97,13 @@ env: |
     value: {{ index .Values "java-args" | quote }}
   - name: ES_PUSH_DIRECT
     value: {{ index .Values "es-push-direct" | quote }}
+#  - name: SERVICES_ESINDEXER_PASSWORD
+#    valueFrom:
+#      secretKeyRef:
+#        name: elasticsearch-master-credentials
+#        key: password
+#  - name: SERVICES_ESINDEXER_USERNAME
+#    valueFrom:
+#      secretKeyRef:
+#        name: elasticsearch-master-credentials
+#        key: username

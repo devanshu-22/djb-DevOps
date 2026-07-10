@@ -1,53 +1,56 @@
-# variable compartment_ocid { default = "ocid1.compartment.oc1..aaaaaaaai5pgeen677gvw73yx6rslxfsfyrtmjk3yeuios6hakfzkl5vioiq" }
-variable "compartment_ocid" { default = "ocid1.tenancy.oc1..aaaaaaaa2p5uw2myjiiowrtub5pcvgrwaqwnpi4fdtgy4x2r4ojrr4l672ga" }
+variable "compartment_ocid" { default = "ocid1.compartment.oc1..aaaaaaaa2wok4iw2lvvzqwq47kiu3kf25pobnzrkqtvfqmdkknj5gwthbhya" }
+variable "tenancy_ocid" { default = "ocid1.tenancy.oc1..aaaaaaaaiy2elljqezrtvaxzi3lfxakemje5ke2ldk74ftkj2ohky5a744ra" }
 
-variable "tenancy_ocid" { default = "ocid1.tenancy.oc1..aaaaaaaa2p5uw2myjiiowrtub5pcvgrwaqwnpi4fdtgy4x2r4ojrr4l672ga" }
-# variable region { default = "ap-mumbai-1" }
-variable "region" { default = "ap-hyderabad-1" }
-variable "availability_domain" { default = "HfTn:AP-HYDERABAD-1-AD-1" }
+variable region { default = "ap-mumbai-1" }
+variable "availability_domain" { default = "rWST:AP-MUMBAI-1-AD-1" }
 
-#### networking ######
-variable "cidr_block_public" { default = "192.168.2.0/24" }
-variable "cidr_public_name" { default = "upyog_dev_public_subnet" }
+#### Networking ####
+#### Public Subnet ####
+variable "cidr_block_public" { default = "192.168.248.0/24" }
+variable "cidr_public_name" { default = "DJB-EDP-LZ-UPYOG-DEV-PUBLIC-SUBNET-BOM" }
 variable "cidr_public_dns_label" { default = "public" }
 
-variable "cidr_block_private" { default = "192.168.1.0/24" }
-variable "cidr_private_name" { default = "oke_worker_private_subnet" }
+#### Private Subnet ####
+variable "cidr_block_private" { default = "192.168.249.0/24" }
+variable "cidr_private_name" { default = "DJB-EDP-LZ-UPYOG-DEV-PRIVATE-SUBNET-BOM" }
 variable "cidr_private_dns_label" { default = "private" }
-variable "interet_gateway_display_name" { default = "upyog_dev_igw" }
-variable "dhcp_display_name" { default = "Default DHCP Options for upyog_dev" }
+
+#### Internet Gateway ####
+variable "interet_gateway_display_name" { default = "DJB-EDP-LZ-UPYOG-DEV-IGW-BOM" }
+variable "dhcp_display_name" { default = "Default DHCP Options for DJB-EDP-LZ-UPYOG-DEV-OKE-BOM" }
 variable "search_domain_names" { default = "upyogdev.oraclevcn.com" }
-variable "vcn_cidr_blocks" { default = "192.168.0.0/16" }
-variable "vcn_display_name" { default = "upyog_dev" }
+
+#### Virtual Cloud Network ####
+variable "vcn_cidr_blocks" { default = "192.168.248.0/21" }
+variable "vcn_display_name" { default = "DJB-EDP-LZ-UPYOG-DEV-VCN-BOM" }
 variable "vcn_dns_label" { default = "upyogdev" }
 
-variable "security_list_display_name" { default = "Default Security List for upyog_dev" }
-variable "route_table_display_name" { default = "Default Route Table for upyog_dev" }
 
-variable "cidr_LB_subnet" { default = "192.168.3.0/24" }
-variable "LB_public_subnet_name" { default = "upyog_LB_public_subnet" }
+variable "security_list_display_name" { default = "Default Security List for DJB-EDP-LZ-UPYOG-DEV-OKE-BOM" }
+variable "route_table_display_name" { default = "Default Route Table for DJB-EDP-LZ-UPYOG-DEV-OKE-BOM" }
+
+#### Load Balancer Public Subnet ####
+variable "cidr_LB_subnet" { default = "192.168.250.0/24" }
+variable "LB_public_subnet_name" { default = "DJB-EDP-LZ-UPYOG-DEV-UPYOG-LB-PUBLIC-SUBNET-BOM" }
 variable "LB_subnet_dns_label" { default = "LB" }
 
 ###################### OKE ##########
 variable "oke_version" { default = "v1.34.1" }
-variable "oke_name" { default = "upyog_oke" }
-variable "node_pool_name" { default = "upyog_dev_pool" }
+variable "oke_name" { default = "DJB-EDP-LZ-UPYOG-DEV-OKE-BOM" }
+variable "node_pool_name" { default = "DJB-EDP-LZ-UPYOG-DEV-NP-BOM" }
 variable "pod_cidr" { default = "10.244.0.0/16" }
 variable "service_cidr" { default = "10.96.0.0/16" }
 variable "node_pool_size" { default = "4" }
-
-
 variable "oke_node_shape" { default = "VM.Standard.E4.Flex" }
+
 ### Oracle Linux ####
 variable "oke_worker_node_image" { default = "Oracle-Linux-8.10-2025.06.17-0" }
 
 ######## Postgres ######################
-
-variable "postgre_private_subnet" { default = "192.168.4.0/24" }
-variable "postgre_private_subnet_name" { default = "postgre_private_subnet" }
-
-variable "postgre_public_subnet" { default = "192.168.5.0/24" }
-variable "postgre_public_subnet_name" { default = "postgre_public_subnet" }
+variable "postgre_private_subnet" { default = "192.168.251.0/24" }
+variable "postgre_private_subnet_name" { default = "DJB-EDP-LZ-UPYOG-DEV-POSTGRE-PRIVATE-SUBNET-BOM" }
+variable "postgre_public_subnet" { default = "192.168.252.0/24" }
+variable "postgre_public_subnet_name" { default = "DJB-EDP-LZ-UPYOG-DEV-POSTGRE-PUBLIC-SUBNET-BOM" }
 
 # Provider identity parameters - Replace these values from API Key Values from OCI User
 
@@ -63,7 +66,7 @@ variable "db_system_db_version" {
 variable "db_system_display_name" {
   description = "postgress db service name"
   type        = string
-  default     = "upyog_dev_postgre" # example value
+  default     = "DJB-EDP-LZ-UPYOG-DEV-DB-BOM" # example value
 }
 
 
@@ -107,7 +110,7 @@ variable "db_system_credentials_password_details_password_type" {
 variable "db_system_credentials_password_details_password" {
   description = "password"
   type        = string
-  default     = "Postgre@Oralce4upypog"
+  default     = "Postgre@Oralce4upyog"
 }
 
 variable "db_system_credentials_username" {
@@ -141,14 +144,14 @@ variable "private_subnet_cidr_block" {
 variable "public_subnet_display_name" {
   description = "public subnet name"
   type        = string
-  default     = "public-subnet" # example value
+  default     = "DJB-EDP-LZ-UPYOG-DEV-PUBLIC-SUBNET-BOM" # example value
 
 }
 
 variable "private_subnet_display_name" {
   description = "public subnet name"
   type        = string
-  default     = "private-subnet" # example value
+  default     = "DJB-EDP-LZ-UPYOG-DEV-PRIVATE-SUBNET-BOM" # example value
 
 }
 
@@ -226,5 +229,5 @@ variable "source_operating_system_image_id" {
 variable "compute_instance_display_name" {
   description = "display name of the compute name"
   type        = string
-  default     = ""
+  default     = "DJB-EDP-LZ-UPYOG-DEV-OKE-NODE-BOM"
 }

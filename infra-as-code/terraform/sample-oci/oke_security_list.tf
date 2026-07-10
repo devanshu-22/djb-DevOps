@@ -1,5 +1,5 @@
 # Source from https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_security_list
-data "oci_core_services" "all_hyd_services" {
+data "oci_core_services" "all_mumbai_services" {
   filter {
     name   = "name"
     values = ["All .* Services In Oracle Services Network"]
@@ -9,12 +9,11 @@ data "oci_core_services" "all_hyd_services" {
 
 
 resource "oci_core_security_list" "k8s_api_endpoint"{
-  # provider = oci.HYD
 
 # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
-  display_name   = "Security Rules for k8s_api_endpoint"
+  display_name   = "DJB-EDP-LZ-UPYOG-DEV-SL-K8S-API-ENDPOINT-BOM"
 
 # Optional
 
@@ -93,7 +92,7 @@ resource "oci_core_security_list" "k8s_api_endpoint"{
 
   egress_security_rules {
     protocol           = "6"  # TCP
-    destination        = data.oci_core_services.all_hyd_services.services[0].cidr_block  # Example: "all-phx-services-in-oracle-services-network"
+    destination        = data.oci_core_services.all_mumbai_services.services[0].cidr_block  # Example: "all-phx-services-in-oracle-services-network"
     destination_type   = "SERVICE_CIDR_BLOCK"
     tcp_options {
       min = 443
@@ -169,9 +168,9 @@ resource "oci_core_security_list" "k8s_api_endpoint"{
 
 resource "oci_core_security_list" "oke_worker_nodes_sl" {
 # Required
-  compartment_id = oci_identity_compartment.create-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id = module.vcn.vcn_id
-  display_name   = "Security Rules for Worker Nodes"
+  display_name   = "DJB-EDP-LZ-UPYOG-DEV-SL-WorkerNodes-BOM"
 
   # 1. Worker Nodes CIDR <-> Worker Nodes CIDR (ALL traffic)
   ingress_security_rules {
@@ -258,7 +257,7 @@ resource "oci_core_security_list" "oke_worker_nodes_sl" {
   # 4. Oracle Services Network (all <region> services, e.g. OKE, Object Storage, Registry, etc.)
   egress_security_rules {
     protocol            = "6" # TCP
-    destination         = data.oci_core_services.all_hyd_services.services[0].cidr_block
+    destination         = data.oci_core_services.all_mumbai_services.services[0].cidr_block
     destination_type    = "SERVICE_CIDR_BLOCK"
   }
 
